@@ -49,11 +49,11 @@ public class RateControllerTest {
 
         RateDto rateDtoGBP = objectMapper.readValue(new ClassPathResource("mocks/rate_gbp.json").getFile(), RateDto.class);
         rateResponseGBP = objectMapper.writeValueAsString(rateDtoGBP);
-        given(rateService.makeConversion(new BigDecimal("100"), CurrencyCode.GBP)).willReturn(rateDtoGBP);
+        given(rateService.makeCurrencyConversion(new BigDecimal("100"), CurrencyCode.GBP)).willReturn(rateDtoGBP);
 
         RateDto rateDtoEUR = objectMapper.readValue(new ClassPathResource("mocks/rate_eur.json").getFile(), RateDto.class);
         rateResponseEUR = objectMapper.writeValueAsString(rateDtoEUR);
-        given(rateService.makeConversion(new BigDecimal("50"), CurrencyCode.EUR)).willReturn(rateDtoEUR);
+        given(rateService.makeCurrencyConversion(new BigDecimal("50"), CurrencyCode.EUR)).willReturn(rateDtoEUR);
 
     }
 

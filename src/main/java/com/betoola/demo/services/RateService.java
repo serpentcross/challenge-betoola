@@ -6,7 +6,6 @@ import com.betoola.demo.exceptions.ExceptionCode400;
 import com.betoola.demo.exceptions.ExceptionCode404;
 import com.betoola.demo.persistence.entities.Rate;
 import com.betoola.demo.persistence.repositories.RateRepository;
-import com.betoola.demo.utils.Converters;
 
 import lombok.RequiredArgsConstructor;
 
@@ -14,7 +13,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Optional;
+
+import static com.betoola.demo.utils.Converters.calculateAmountGross;
+import static com.betoola.demo.utils.Converters.calculateExchangeFee;
 
 @Service
 @RequiredArgsConstructor
@@ -25,12 +28,12 @@ public class RateService {
 
     private final RateRepository rateRepository;
 
-    public RateDto makeConversion(BigDecimal amount, CurrencyCode currency) {
+    public RateDto makeCurrencyConversion(BigDecimal amountToConvert, CurrencyCode currency) {
 
         BigDecimal validDecimalAmount;
 
         try {
-            validDecimalAmount = amount;
+            validDecimalAmount = amountToConvert;
         } catch (NumberFormatException ex) {
             throw new ExceptionCode400();
         }
@@ -38,7 +41,27 @@ public class RateService {
         Optional<Rate> rateOptionalFrom = rateRepository.findByCode(currency);
 
         if (rateOptionalFrom.isPresent()) {
-            return Converters.convertEntityToDto(rateOptionalFrom.get(), MARGIN, validDecimalAmount, currency);
+
+            Rate rate = rateOptionalFrom.get();
+
+            BigDecimal price = rate.getPrice();
+            BigDecimal convertedAmountGross = calculateAmountGross(validDecimalAmount, price);
+            BigDecimal exchangeFee = calculateExchangeFee(convertedAmountGross, MARGIN);
+            BigDecimal convertedAmountNet = convertedAmountGross.subtract(exchangeFee);
+
+            return RateDto.builder()
+                    .amountIn(amountToConvert)
+                    .currencyIn(currency)
+                    .result(
+                        RateDto.ResultDto.builder()
+                            .currencyOut(currency.equals(CurrencyCode.GBP) ? CurrencyCode.EUR : CurrencyCode.GBP)
+                            .exchangeFee(exchangeFee)
+                            .price(price.setScale(2, RoundingMode.FLOOR))
+                            .amountOut(convertedAmountNet)
+                        .build()
+                    )
+                    .build();
+
         } else {
             throw new ExceptionCode404();
         }
