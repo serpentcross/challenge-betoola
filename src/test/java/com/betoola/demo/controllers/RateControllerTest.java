@@ -3,6 +3,7 @@ package com.betoola.demo.controllers;
 import com.betoola.demo.dtos.RateDto;
 import com.betoola.demo.enums.CurrencyCode;
 import com.betoola.demo.services.RateService;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +17,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.math.BigDecimal;
 
 import static org.mockito.BDDMockito.given;
 
@@ -46,21 +49,20 @@ public class RateControllerTest {
 
         RateDto rateDtoGBP = objectMapper.readValue(new ClassPathResource("mocks/rate_gbp.json").getFile(), RateDto.class);
         rateResponseGBP = objectMapper.writeValueAsString(rateDtoGBP);
-        given(rateService.getRate("100", CurrencyCode.GBP, CurrencyCode.EUR)).willReturn(rateDtoGBP);
+        given(rateService.makeConversion(new BigDecimal("100"), CurrencyCode.GBP)).willReturn(rateDtoGBP);
 
         RateDto rateDtoEUR = objectMapper.readValue(new ClassPathResource("mocks/rate_eur.json").getFile(), RateDto.class);
         rateResponseEUR = objectMapper.writeValueAsString(rateDtoEUR);
-        given(rateService.getRate("50", CurrencyCode.EUR, CurrencyCode.GBP)).willReturn(rateDtoEUR);
+        given(rateService.makeConversion(new BigDecimal("50"), CurrencyCode.EUR)).willReturn(rateDtoEUR);
 
     }
 
     @Test
     public void testMustReturnOkForGBPConversion() throws Exception {
         mockMvc
-            .perform(get("/rates")
+            .perform(get("/rates/convert")
                 .param("amount", "100")
-                .param("from", "GBP")
-                .param("to", "EUR")
+                .param("currency", "GBP")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().json(rateResponseGBP));
@@ -69,10 +71,9 @@ public class RateControllerTest {
     @Test
     public void testMustReturnOkForEURConversion() throws Exception {
         mockMvc
-            .perform(get("/rates")
+            .perform(get("/rates/convert")
                 .param("amount", "50")
-                .param("from", "EUR")
-                .param("to", "GBP")
+                .param("currency", "EUR")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().json(rateResponseEUR));
@@ -81,7 +82,7 @@ public class RateControllerTest {
     @Test
     public void testMustReturnBadRequestException() throws Exception {
         mockMvc
-            .perform(get("/rates")
+            .perform(get("/rates/convert")
                 .param("from", "EUR")
                 .param("to", "GBP")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -93,8 +94,7 @@ public class RateControllerTest {
         mockMvc
             .perform(get("/rate")
                 .param("amount", "100")
-                .param("from", "GBP")
-                .param("to", "EUR")
+                .param("currency", "GBP")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
