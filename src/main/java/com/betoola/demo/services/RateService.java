@@ -1,7 +1,8 @@
 package com.betoola.demo.services;
 
 import com.betoola.demo.dtos.RateDto;
-import com.betoola.demo.enums.CurrencyCode;
+import com.betoola.demo.dtos.CurrencyCode;
+import com.betoola.demo.dtos.ResultDto;
 import com.betoola.demo.exceptions.ExceptionCode400;
 import com.betoola.demo.exceptions.ExceptionCode404;
 import com.betoola.demo.persistence.entities.Rate;
@@ -53,7 +54,7 @@ public class RateService {
                     .amountIn(amountToConvert)
                     .currencyIn(currency)
                     .result(
-                        RateDto.ResultDto.builder()
+                        ResultDto.builder()
                             .currencyOut(currency.equals(CurrencyCode.GBP) ? CurrencyCode.EUR : CurrencyCode.GBP)
                             .exchangeFee(exchangeFee)
                             .price(price.setScale(2, RoundingMode.FLOOR))

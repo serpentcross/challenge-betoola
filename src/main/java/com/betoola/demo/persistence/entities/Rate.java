@@ -1,6 +1,6 @@
 package com.betoola.demo.persistence.entities;
 
-import com.betoola.demo.enums.CurrencyCode;
+import com.betoola.demo.dtos.CurrencyCode;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

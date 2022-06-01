@@ -1,7 +1,8 @@
 package com.betoola.demo.services;
 
+import com.betoola.demo.dtos.CurrencyCode;
 import com.betoola.demo.dtos.RateDto;
-import com.betoola.demo.enums.CurrencyCode;
+
 import com.betoola.demo.exceptions.ExceptionCode404;
 import com.betoola.demo.exceptions.ExceptionCode500;
 

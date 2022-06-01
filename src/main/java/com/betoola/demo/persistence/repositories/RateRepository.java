@@ -1,6 +1,7 @@
 package com.betoola.demo.persistence.repositories;
 
-import com.betoola.demo.enums.CurrencyCode;
+import com.betoola.demo.dtos.CurrencyCode;
+
 import com.betoola.demo.persistence.entities.Rate;
 
 import org.springframework.data.jpa.repository.JpaRepository;

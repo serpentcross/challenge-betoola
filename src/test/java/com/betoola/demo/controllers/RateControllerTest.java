@@ -1,7 +1,7 @@
 package com.betoola.demo.controllers;
 
+import com.betoola.demo.dtos.CurrencyCode;
 import com.betoola.demo.dtos.RateDto;
-import com.betoola.demo.enums.CurrencyCode;
 import com.betoola.demo.services.RateService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(RateController.class)
+@WebMvcTest(RatesController.class)
 public class RateControllerTest {
 
     private MockMvc mockMvc;
