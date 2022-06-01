@@ -1,10 +1,10 @@
 {
-  "currencyCodeFrom": "GBP",
-  "amountFrom": "100",
+  "currencyIn": "GBP",
+  "amountIn": 100,
   "result": {
-    "currencyCodeTo": "EUR",
-    "amountTo": "121.28",
-    "price": "1.24",
-    "exchangeFee": "2.48"
+    "currencyOut": "EUR",
+    "amountOut": 121.28,
+    "price": 1.23,
+    "exchangeFee": 2.47
   }
 }

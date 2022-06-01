@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -25,7 +26,7 @@ public class RateServiceTest {
     public void mustConvertPoundsToEuros() throws IOException {
         assertEquals(
             new ObjectMapper().readValue(new ClassPathResource("mocks/rate_gbp.json").getFile(), RateDto.class),
-            rateService.getRate("100", CurrencyCode.GBP, CurrencyCode.EUR)
+            rateService.makeConversion(new BigDecimal("100"), CurrencyCode.GBP)
         );
     }
 
@@ -33,7 +34,7 @@ public class RateServiceTest {
     public void mustConvertEurosToPounds() throws IOException {
         assertEquals(
             new ObjectMapper().readValue(new ClassPathResource("mocks/rate_eur.json").getFile(), RateDto.class),
-            rateService.getRate("50", CurrencyCode.EUR, CurrencyCode.GBP)
+            rateService.makeConversion(new BigDecimal("50"), CurrencyCode.EUR)
         );
     }
 

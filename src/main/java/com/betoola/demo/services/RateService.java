@@ -25,20 +25,20 @@ public class RateService {
 
     private final RateRepository rateRepository;
 
-    public RateDto getRate(String amount, CurrencyCode from, CurrencyCode to) {
+    public RateDto makeConversion(BigDecimal amount, CurrencyCode currency) {
 
         BigDecimal validDecimalAmount;
 
         try {
-            validDecimalAmount = new BigDecimal(amount);
+            validDecimalAmount = amount;
         } catch (NumberFormatException ex) {
             throw new ExceptionCode400();
         }
 
-        Optional<Rate> rateOptionalFrom = rateRepository.findByCode(from);
+        Optional<Rate> rateOptionalFrom = rateRepository.findByCode(currency);
 
         if (rateOptionalFrom.isPresent()) {
-            return Converters.convertEntityToDto(rateOptionalFrom.get(), MARGIN, validDecimalAmount, to);
+            return Converters.convertEntityToDto(rateOptionalFrom.get(), MARGIN, validDecimalAmount, currency);
         } else {
             throw new ExceptionCode404();
         }

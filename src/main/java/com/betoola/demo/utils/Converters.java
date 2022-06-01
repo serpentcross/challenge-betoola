@@ -5,41 +5,33 @@ import com.betoola.demo.enums.CurrencyCode;
 import com.betoola.demo.persistence.entities.Rate;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.Locale;
+import java.math.RoundingMode;
 
 public class Converters {
 
-    public static RateDto convertEntityToDto(Rate rate, BigDecimal MARGIN, BigDecimal amountFrom, CurrencyCode currencyTo) {
+    public static RateDto convertEntityToDto(Rate rate, BigDecimal MARGIN, BigDecimal amountFrom, CurrencyCode currency) {
 
         BigDecimal amountTo = amountFrom.multiply(rate.getPrice());
 
         return RateDto.builder()
-            .amountFrom(convertScientificDecimalOutputToNormal(amountFrom))
-            .currencyCodeFrom(rate.getCode())
-            .result(calculateSumWithFee(currencyTo, rate.getPrice(), amountTo, MARGIN)
+            .amountIn(amountFrom)
+            .currencyIn(rate.getCode())
+            .result(calculateSumWithFee(currency, rate.getPrice().setScale(2, RoundingMode.FLOOR), amountTo, MARGIN)
         ).build();
 
     }
 
     public static RateDto.ResultDto calculateSumWithFee(CurrencyCode to, BigDecimal price, BigDecimal amountTo, BigDecimal MARGIN) {
 
-        BigDecimal fee = amountTo.multiply(MARGIN).divide(new BigDecimal("100"));
+        BigDecimal fee = amountTo.multiply(MARGIN).divide(new BigDecimal("100")).setScale(2, RoundingMode.FLOOR);
 
         return RateDto.ResultDto.builder()
-            .exchangeFee(convertScientificDecimalOutputToNormal(fee))
-            .amountTo(convertScientificDecimalOutputToNormal(amountTo.subtract(fee)))
-            .currencyCodeTo(to)
-            .price(convertScientificDecimalOutputToNormal(price))
+            .exchangeFee(fee)
+            .amountOut(amountTo.subtract(fee).setScale(2, RoundingMode.FLOOR))
+            .currencyOut(to)
+            .price(price)
         .build();
 
-    }
-
-    public static String convertScientificDecimalOutputToNormal(BigDecimal decimal) {
-        DecimalFormat df = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
-        df.setMaximumFractionDigits(2);
-        return df.format(decimal.doubleValue());
     }
 
 }

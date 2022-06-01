@@ -7,14 +7,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class RateDto {
 
-    private CurrencyCode currencyCodeFrom;
-    private String amountFrom;
+    private CurrencyCode currencyIn;
+    private BigDecimal amountIn;
     private ResultDto result;
 
     @Data
@@ -22,10 +24,10 @@ public class RateDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ResultDto {
-        private CurrencyCode currencyCodeTo;
-        private String amountTo;
-        private String price;
-        private String exchangeFee;
+        private CurrencyCode currencyOut;
+        private BigDecimal amountOut;
+        private BigDecimal price;
+        private BigDecimal exchangeFee;
     }
 
 }
