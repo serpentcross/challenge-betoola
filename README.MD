@@ -91,20 +91,20 @@ http://localhost:8080/api
 Possible test call
 
 ```
-http://localhost:8080/api/rates?amount=50&from=EUR&to=GBP
+http://localhost:8080/api/rates/convert?amount=100&currency=GBP
 ```
 
 Should return a dto in JSON format:
 
 ```
 {
-    "currencyCodeFrom": "EUR",
-    "amountFrom": "50",
+    "currencyIn": "GBP",
+    "amountIn": 100,
     "result": {
-        "currencyCodeTo": "GBP",
-        "amountTo": "39.6",
-        "price": "0.81",
-        "exchangeFee": "0.81"
+        "currencyOut": "EUR",
+        "amountOut": 79.19,
+        "price": 1.23,
+        "exchangeFee": 1.61
     }
 }
 ```

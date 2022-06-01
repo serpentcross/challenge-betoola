@@ -1,0 +1,104 @@
+openapi: 3.0.1
+info:
+  contact:
+    email: vladimirandreev1987@mail.com
+  description: Currency conversion calculation service.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Reflectoring
+  version: 0.0.1
+servers:
+- description: Generated server url
+  url: http://localhost:8080/api
+paths:
+  /rates/convert:
+    get:
+      operationId: convertCurrency
+      parameters:
+      - explode: true
+        in: query
+        name: amount
+        required: true
+        schema:
+          type: number
+        style: form
+      - explode: true
+        in: query
+        name: currency
+        required: true
+        schema:
+          $ref: '#/components/schemas/CurrencyCode'
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateDto'
+          description: Operation was successful!
+        "400":
+          content:
+            '*/*':
+              schema:
+                type: string
+          description: Error! One or several parameters do not match proper values!
+        "404":
+          content:
+            '*/*':
+              schema:
+                type: string
+          description: Error! No entity was found by given identifier!
+        "500":
+          content:
+            '*/*':
+              schema:
+                type: string
+          description: Error! The given parameter cannot be empty
+      summary: Convert entered amount specified currency.
+      tags:
+      - rate-controller
+      x-accepts: application/json
+      x-tags:
+      - tag: rate-controller
+components:
+  schemas:
+    CurrencyCode:
+      enum:
+      - EUR
+      - GBP
+      type: string
+    RateDto:
+      example:
+        result:
+          price: 1.4658129805029452
+          exchangeFee: 5.962133916683182
+          currencyOut: EUR
+          amountOut: 6.027456183070403
+        currencyIn: EUR
+        amountIn: 0.8008281904610115
+      properties:
+        currencyIn:
+          $ref: '#/components/schemas/CurrencyCode'
+        amountIn:
+          type: number
+        result:
+          $ref: '#/components/schemas/ResultDto'
+      type: object
+    ResultDto:
+      example:
+        price: 1.4658129805029452
+        exchangeFee: 5.962133916683182
+        currencyOut: EUR
+        amountOut: 6.027456183070403
+      properties:
+        currencyOut:
+          $ref: '#/components/schemas/CurrencyCode'
+        amountOut:
+          type: number
+        price:
+          type: number
+        exchangeFee:
+          type: number
+      type: object

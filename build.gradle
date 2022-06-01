@@ -2,10 +2,11 @@ plugins {
 	id 'org.springframework.boot' version '2.7.0'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id 'org.openapi.generator' version '6.0.0'
 }
 
 group = 'com.betoola'
-version = '0.0.3'
+version = '0.0.4'
 sourceCompatibility = '11'
 
 configurations {
@@ -36,6 +37,8 @@ dependencies {
 
 	implementation("org.springdoc:springdoc-openapi-ui:${swaggerVersion}")
 
+	implementation("org.openapitools:jackson-databind-nullable:0.2.0")
+
 	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
 	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 
@@ -46,3 +49,20 @@ dependencies {
 test {
 	useJUnitPlatform()
 }
+
+openApiGenerate {
+	generatorName = "spring"
+	inputSpec = "$rootDir/src/main/resources/openapi.yaml".toString()
+	outputDir = "$rootDir".toString()
+	apiPackage = "com.betoola.demo.controllers"
+	invokerPackage = "com.betoola.demo"
+	modelPackage = "com.betoola.demo.dtos"
+	configOptions = [
+		dateLibrary: "java8",
+		additionalModelTypeAnnotations: "@lombok.Data;@lombok.Builder;@lombok.NoArgsConstructor;@lombok.AllArgsConstructor",
+		interfaceOnly: 'true',
+		skipDefaultInterface: 'true'
+	]
+}
+
+compileJava.dependsOn tasks.openApiGenerate
