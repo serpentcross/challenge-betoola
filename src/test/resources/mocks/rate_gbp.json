@@ -1,10 +1,10 @@
 {
   "currencyIn": "GBP",
-  "amountIn": 100,
+  "amountIn": 50,
   "result": {
     "currencyOut": "EUR",
-    "amountOut": 121.28,
+    "amountOut": 39.60,
     "price": 1.23,
-    "exchangeFee": 2.47
+    "exchangeFee": 0.80
   }
 }

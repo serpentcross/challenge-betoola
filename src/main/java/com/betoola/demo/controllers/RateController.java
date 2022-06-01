@@ -36,7 +36,7 @@ public class RateController {
         @ApiResponse(responseCode = "404", description = ErrorTexts.ERROR_404_TEXT) })
     @GetMapping("/convert")
     public RateDto convertCurrency(@RequestParam BigDecimal amount, @Parameter @RequestParam CurrencyCode currency) {
-        return rateService.makeConversion(amount, currency);
+        return rateService.makeCurrencyConversion(amount, currency);
     }
 
 }
